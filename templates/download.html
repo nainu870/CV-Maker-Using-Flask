@@ -1,0 +1,202 @@
+<!doctype html>
+<head>
+        <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js">
+    </script>
+
+    <script src=
+"https://files.codepedia.info/files/uploads/iScripts/html2canvas.js">
+    </script>
+
+
+
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+   <style>
+   h3{
+   margin-left:40px;
+   color:green;
+   font-size:50px;
+
+   }
+
+      .content{
+      border-style:ridge;
+      padding:10px;
+      margin-left:150px;
+      margin-top:50px;
+      margin-right:300px;
+      color:black;
+      }
+      #names{
+      color:#172687;
+      }
+      .content .leftbox {
+                float:left;
+                width:50%;
+                height:210px;
+            }
+      .content .rightbox {
+              float:right;
+              width:50%;
+              text-align:right;
+              height:210px;
+            }
+
+.btn{
+  background-color:#253b5e;
+  color: white;
+  padding:15px;
+  margin-left:5px;
+  border:0px;
+  border-radius:15px;
+}
+
+.btns{
+  background-color:#24ab46;
+  color: white;
+  margin-top:40px;
+  padding:15px;
+  border:0px;
+  border-radius:15px;
+}
+
+   </style>
+</head>
+<html>
+   <body>
+   {% for key,value in res.items()%}
+      {% if value==0%}
+         key.remove()
+      {% endif%}
+   {% endfor %}
+   <h3>Preview your resume/cv here! Click for download. </h3>
+   <div class="brdr" >
+
+
+      <div class="content" id="html-content-holder">
+      <div class="leftbox">
+         <p id="names">{{fname}} {{lname}}</p>
+         <p>{{ designation }}</p>
+         <p>{{summary}}</p>
+      </div>
+      <div class="rightbox">
+         <p >{{email}}</p>
+            <p>{{ address}}</p>
+            <p>{{phoneno}}</p>
+            <p>{{github}}</p>
+            <p>{{linkedIn}}</p>
+      </div>
+         <hr>
+         <div class="Edu">
+            <h2>Education Details</h2>
+            <ul>
+               {% for i in Education.split(",") %}
+                  <li>{{ i }}</li>
+               {% endfor %}
+            </ul>
+
+         </div>
+         <hr>
+
+         <div class="skill">
+            <h2 >Skills</h2>
+               {% for i in skills.split(",") %}
+               <button class="btn" target="_blank" style="margin-bottom:10px;"> {{ i }}</button>
+               {% endfor %}
+         </div>
+
+         <hr>
+         <div class="Certi">
+            <h2>Certification</h2>
+            <ul>
+               {% for i in certificates.split(",") %}
+                  <li>{{ i }}</li>
+               {% endfor %}
+            </ul>
+
+         </div>
+
+         <hr>
+         <div class="Hobbies">
+            <h2>Hobbies</h2>
+            <ul>
+               {% for i in hobbies.split(",") %}
+                  <li>{{ i }}</li>
+               {% endfor %}
+            </ul>
+
+         </div>
+
+
+<hr>
+         <div class="pd">
+            <h2 >Personal Details </h2>
+               <p>Date of birth-{{dob}}</p>
+               <p>Address-{{address}}</p>
+               <p>Country-{{country}}</p>
+               <p>Languages Known-</p>
+               {%for i in lang.split(",")%}
+                  <button class="btn">{{i}}</button>
+               {% endfor %}
+               <p>Projects-
+                  {% for i in project.split(" ") %}
+                     <a href="#">{{project}}</a>
+                  {% endfor %}
+
+
+         </div>
+
+      </div>
+   </div>
+
+
+   <input id="btn-Preview-Image" type="button" class="btns" style="margin-left:200px; "
+                value="Preview" />
+
+    <a id="btn-Convert-Html2Image" href="#" class="btns" style="margin-left:500px; ">
+        Download
+    </a>
+
+    <br/>
+       <div id="previewImage"></div>
+
+    <script>
+        $(document).ready(function() {
+
+            // Global variable
+            var element = $("#html-content-holder");
+
+            // Global variable
+            var getCanvas;
+
+            $("#btn-Preview-Image").on('click', function() {
+                html2canvas(element, {
+                    onrendered: function(canvas) {
+                        $("#previewImage").append(canvas);
+                        getCanvas = canvas;
+                    }
+                });
+            });
+
+            $("#btn-Convert-Html2Image").on('click', function() {
+                var imageData =
+                    getCanvas.toDataURL("image/png");
+
+                // Now browser starts downloading
+                // it instead of just showing it
+                var newData = imageData.replace(
+                /^data:image\/png/, "data:application/octet-stream");
+
+                $("#btn-Convert-Html2Image").attr(
+                "download", "resume.png").attr(
+                "href", newData);
+            });
+        });
+    </script>
+   <center></center>
+
+
+
+
+   </body>
+</html>
